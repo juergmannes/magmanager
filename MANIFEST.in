@@ -1,0 +1,3 @@
+graft magmanager/templates
+graft magmanager/static
+include magmanager/schema.sql

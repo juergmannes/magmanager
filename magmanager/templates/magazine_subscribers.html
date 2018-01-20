@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+  
+    <h2>{{ mags[0].title }}</h2>
+  <br/>
+  <h2>Subscribers</h2>
+  <ul class=users>
+  {% for user in users %}
+    <li>{{ user.short_name }}
+        <form action="{{ url_for('remove_subscriber') }}" method=post class=remove_button>
+            <input type=hidden size=30 name=magazine_id value="{{ mags[0].id }}">
+            <input type=hidden size=30 name=short_name value="{{ user.short_name }}">
+            <input type=submit value="Remove subscriber">
+        </form></li>
+  {% endfor %}
+  </ul>
+  <form action="{{ url_for('add_subscriber') }}" method=post class=add_magazine>
+      <dl>
+        <dt>Add new subscriber:
+        <dt><input type=text size=30 name=short_name>
+        <dt><input type=hidden size=30 name=magazine_id value="{{ mags[0].id }}">
+        <dt><input type=submit value=Add>
+      </dl>
+  </form>
+{% endblock %}

@@ -1,0 +1,1 @@
+from .magmanager import app

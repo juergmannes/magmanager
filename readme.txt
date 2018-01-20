@@ -1,0 +1,1 @@
+A little Flask demo application to handle company internal magazine subscriptions.
