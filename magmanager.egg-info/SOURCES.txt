@@ -1,0 +1,15 @@
+MANIFEST.in
+magmanager/__init__.py
+magmanager/magmanager.py
+magmanager/schema.sql
+magmanager.egg-info/PKG-INFO
+magmanager.egg-info/SOURCES.txt
+magmanager.egg-info/dependency_links.txt
+magmanager.egg-info/requires.txt
+magmanager.egg-info/top_level.txt
+magmanager/static/style.css
+magmanager/templates/about.html
+magmanager/templates/layout.html
+magmanager/templates/magazine_subscribers.html
+magmanager/templates/show_magazines.html
+magmanager/templates/users.html

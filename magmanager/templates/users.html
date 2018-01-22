@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+  
+  <h2>User Management</h2>
+  <br/>
+  <ul class=users>
+  {% for user in users %}
+    <li>{{ user.short_name }}
+  {% endfor %}
+  </ul>
+  <form action="{{ url_for('add_user') }}" method=post class=add_user>
+      <dl>
+        <dt>Add new user:
+        <dt><input type=text size=30 name=short_name>
+        <dt><input type=submit value=Add>
+      </dl>
+  </form>
+{% endblock %}

@@ -78,20 +78,43 @@ def magazine_subscribers(magazine_id):
     users = cur.fetchall()
     return render_template('magazine_subscribers.html', mags=mags, users=users)
 
+@app.route('/Users')
+def users():
+    db = get_db()
+    cur = db.execute('select short_name from users order by short_name asc')
+    users = cur.fetchall()
+    return render_template('users.html', users=users)
+
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    db = get_db()
+    # Add new user if it does not exist yet
+    cur = db.execute('select id from users where short_name = ?',[request.form['short_name']])
+    data = cur.fetchone()
+    if data is None:
+        db.execute('insert into users (short_name) values (?)',[request.form['short_name']])
+        db.commit()
+        flash('New user was successfully created') 
+    else:
+        flash('User already exists in database')
+    return redirect(url_for('users'))
+    
 @app.route('/add_subscriber', methods=['POST'])
 def add_subscriber():
     db = get_db()
-    # Add subscription if he/she is not a subscriber yet
+    # Add subscription if he/she is not a subscriber yet and he/she is an existing user
+    cur = db.execute('select id from users where short_name = ?',[request.form['short_name']])
+    user_record = cur.fetchone()
     cur = db.execute('select * from users_mags um join users u on um.users_id = u.id where um.mags_id = ? and u.short_name = ?',[request.form['magazine_id'],request.form['short_name']])
     data = cur.fetchone()
-    if data is None:
+    if data is None and user_record is not None:
         cur = db.execute('select id from users where short_name = ?',[request.form['short_name'],])
         user_id = cur.fetchone()[0]
         db.execute('insert into users_mags (users_id,mags_id) values (?,?)',[user_id,request.form['magazine_id']])
         db.commit()
         flash('New subscriber was successfully added')
     else:
-        flash('User is already a subscriber')
+        flash('User is already a subscriber or does not exist')
     return redirect(url_for('magazine_subscribers',magazine_id=request.form['magazine_id']))
 
 @app.route('/remove_subscriber', methods=['POST'])
