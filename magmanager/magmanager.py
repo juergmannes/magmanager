@@ -4,13 +4,13 @@ import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
     
-app = Flask(__name__) # create the application instance :)
+app = Flask(__name__,static_url_path='/magmanager/static') # create the application instance
 app.config.from_object(__name__) # load config from this file , magmanager.py
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'magmanager.db'),
-    SECRET_KEY=' \x98\xe3\x92*}Lnn\x04\xc6z\\u\xf0h/\xa5\xe7\xad\xbc\xe0Y\xd4'
+    SECRET_KEY='\x0e\x15jG\xef\xed!\x81H\x03\xf0"\xcb\x86\x8f\xb2\xb3`\\l|\xcfIb'
 ))
 app.config.from_envvar('MAGMANAGER_SETTINGS', silent=True)
 
@@ -68,7 +68,15 @@ def add_magazine():
     else:
         flash('Magazine already exists in database')
     return redirect(url_for('home'))
-  
+
+@app.route('/remove_magazine', methods=['POST'])
+def remove_magazine():
+    db = get_db()
+    db.execute('delete from mags where id = ?',[request.form['id'],])
+    db.commit()
+    flash('Magazine removed')
+    return redirect(url_for('home'))
+    
 @app.route('/magazine/<magazine_id>')
 def magazine_subscribers(magazine_id):
     db = get_db()
@@ -97,6 +105,14 @@ def add_user():
         flash('New user was successfully created') 
     else:
         flash('User already exists in database')
+    return redirect(url_for('users'))
+    
+@app.route('/remove_user', methods=['POST'])
+def remove_user():
+    db = get_db()
+    db.execute('delete from users where short_name = ?',[request.form['short_name'],])
+    db.commit()
+    flash('User removed')
     return redirect(url_for('users'))
     
 @app.route('/add_subscriber', methods=['POST'])
